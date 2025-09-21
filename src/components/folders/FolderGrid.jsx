@@ -1,5 +1,5 @@
 // src/components/folders/FolderGrid.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import FolderCard from './FolderCard';
 import FolderModal from './FolderModal';
 
