@@ -1,7 +1,7 @@
 // src/components/folders/FolderCard.jsx
 import React from 'react';
 
-const FolderCard = ({ folder, onEdit, onDelete }) => {
+const FolderCard = ({ folder, onEdit, onDelete, onToggleFavorite }) => {
   return (
     <div className="bg-white rounded-xl p-6 border border-gray-100 hover:shadow-md transition-shadow group cursor-pointer">
       <div className="flex items-start justify-between mb-4">
@@ -20,7 +20,26 @@ const FolderCard = ({ folder, onEdit, onDelete }) => {
         </div>
         <div className="opacity-0 group-hover:opacity-100 transition-opacity flex space-x-1">
           <button
-            onClick={() => onEdit(folder)}
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggleFavorite(folder.id);
+            }}
+            className={`p-2 rounded-lg transition-colors ${
+              folder.isFavorite
+                ? 'text-red-500 hover:text-red-700 hover:bg-red-50'
+                : 'text-gray-400 hover:text-red-500 hover:bg-red-50'
+            }`}
+            title={folder.isFavorite ? "Retirer des favoris" : "Ajouter aux favoris"}
+          >
+            <svg className="w-4 h-4" fill={folder.isFavorite ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+            </svg>
+          </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onEdit(folder);
+            }}
             className="p-2 text-gray-400 hover:text-blue-600 rounded-lg hover:bg-blue-50"
             title="Modifier"
           >
@@ -29,7 +48,10 @@ const FolderCard = ({ folder, onEdit, onDelete }) => {
             </svg>
           </button>
           <button
-            onClick={() => onDelete(folder.id)}
+            onClick={(e) => {
+              e.stopPropagation();
+              onDelete(folder.id);
+            }}
             className="p-2 text-gray-400 hover:text-red-600 rounded-lg hover:bg-red-50"
             title="Supprimer"
           >
@@ -40,7 +62,7 @@ const FolderCard = ({ folder, onEdit, onDelete }) => {
         </div>
       </div>
       <div className="text-xs text-gray-400">
-        Créé le {new Date(folder.createdAt).toLocaleDateString('fr-FR')}
+        Créé le {folder.createdAt.toLocaleDateString('fr-FR')}
       </div>
     </div>
   );

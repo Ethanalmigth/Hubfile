@@ -1,7 +1,7 @@
 // src/components/files/FileCard.jsx
 import React, { useState } from 'react';
 
-const FileCard = ({ file, onRename, onDelete, onDownload, onShare }) => {
+const FileCard = ({ file, onRename, onDelete, onDownload, onShare, onToggleFavorite }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   const getIcon = (type) => {
@@ -33,7 +33,7 @@ const FileCard = ({ file, onRename, onDelete, onDownload, onShare }) => {
             <div className="flex items-center text-xs text-gray-500 mt-1 space-x-2">
               <span>{file.size}</span>
               <span>•</span>
-              <span>Modifié le {new Date(file.updatedAt).toLocaleDateString('fr-FR')}</span>
+              <span>Modifié le {file.updatedAt.toLocaleDateString('fr-FR')}</span>
             </div>
           </div>
         </div>
@@ -42,7 +42,26 @@ const FileCard = ({ file, onRename, onDelete, onDownload, onShare }) => {
         {isHovered && (
           <div className="flex space-x-1 opacity-100 transition-opacity">
             <button
-              onClick={() => onRename(file)}
+              onClick={(e) => {
+                e.stopPropagation();
+                onToggleFavorite(file.id);
+              }}
+              className={`p-2 rounded-lg transition-colors ${
+                file.isFavorite
+                  ? 'text-red-500 hover:text-red-700 hover:bg-red-50'
+                  : 'text-gray-400 hover:text-red-500 hover:bg-red-50'
+              }`}
+              title={file.isFavorite ? "Retirer des favoris" : "Ajouter aux favoris"}
+            >
+              <svg className="w-4 h-4" fill={file.isFavorite ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+              </svg>
+            </button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onRename(file);
+              }}
               className="p-2 text-gray-400 hover:text-blue-600 rounded-lg hover:bg-blue-50"
               title="Renommer"
             >
@@ -51,7 +70,10 @@ const FileCard = ({ file, onRename, onDelete, onDownload, onShare }) => {
               </svg>
             </button>
             <button
-              onClick={() => onDownload(file)}
+              onClick={(e) => {
+                e.stopPropagation();
+                onDownload(file);
+              }}
               className="p-2 text-gray-400 hover:text-green-600 rounded-lg hover:bg-green-50"
               title="Télécharger"
             >
@@ -60,7 +82,10 @@ const FileCard = ({ file, onRename, onDelete, onDownload, onShare }) => {
               </svg>
             </button>
             <button
-              onClick={() => onShare(file)}
+              onClick={(e) => {
+                e.stopPropagation();
+                onShare(file);
+              }}
               className="p-2 text-gray-400 hover:text-amber-600 rounded-lg hover:bg-amber-50"
               title="Partager"
             >
@@ -69,7 +94,10 @@ const FileCard = ({ file, onRename, onDelete, onDownload, onShare }) => {
               </svg>
             </button>
             <button
-              onClick={() => onDelete(file.id)}
+              onClick={(e) => {
+                e.stopPropagation();
+                onDelete(file.id);
+              }}
               className="p-2 text-gray-400 hover:text-red-600 rounded-lg hover:bg-red-50"
               title="Supprimer"
             >
