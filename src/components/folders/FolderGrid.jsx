@@ -1,145 +1,107 @@
-// src/components/folders/FolderGrid.jsx
-import React, { useState, useEffect } from 'react';
-import FolderCard from './FolderCard';
-import FolderModal from './FolderModal';
-
-const FolderGrid = ({ searchTerm = '', filterType = 'all', viewMode = 'grid' }) => {
-  // Données initiales avec favoris et dates
-  const [folders, setFolders] = useState([
+import React, { useState } from "react";
+import { Download, Trash2, Star, Clock } from "lucide-react";
+import { FolderCardGrid, FolderCardList } from "./FolderCard";
+export default function FolderGrid() {
+  const initialFolders = [
     {
       id: 1,
-      name: "Projets clients",
-      description: "Dossier central pour tous les documents clients en cours",
-      createdAt: new Date(2025, 4, 1), // mai 2025
-      isFavorite: true,
+      name: "Documents",
+      description: "Fichiers importants",
+      created: "Il y a 2 jours",
     },
     {
       id: 2,
-      name: "Documents administratifs",
-      description: "Factures, contrats, documents légaux",
-      createdAt: new Date(2025, 3, 15), // avril 2025
-      isFavorite: false,
+      name: "Images",
+      description: "Photos et graphiques",
+      created: "Il y a 5 jours",
     },
     {
       id: 3,
-      name: "Archives 2024",
-      description: "Tous les fichiers de l'année précédente",
-      createdAt: new Date(2025, 0, 10), // janvier 2025
-      isFavorite: false,
+      name: "Projets",
+      description: "Travaux en cours",
+      created: "Il y a 1 semaine",
     },
-  ]);
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingFolder, setEditingFolder] = useState(null);
-
-  // Filtre & tri
-  const filteredFolders = folders
-    .filter(folder => {
-      // Filtre par recherche
-      const matchesSearch = folder.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           folder.description?.toLowerCase().includes(searchTerm.toLowerCase());
-
-      // Filtre par type
-      if (filterType === 'favorites') return folder.isFavorite && matchesSearch;
-      if (filterType === 'recent') {
-        const oneMonthAgo = new Date();
-        oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
-        return folder.createdAt > oneMonthAgo && matchesSearch;
-      }
-      return matchesSearch; // 'all'
-    })
-    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // tri par date (plus récent en premier)
-
-  const handleCreateOrUpdate = (folderData) => {
-    if (editingFolder) {
-      setFolders(folders.map(f => f.id === folderData.id ? folderData : f));
-    } else {
-      setFolders([...folders, { ...folderData, createdAt: new Date() }]);
-    }
-    setIsModalOpen(false);
-    setEditingFolder(null);
-  };
-
-  const handleEdit = (folder) => {
-    setEditingFolder(folder);
-    setIsModalOpen(true);
-  };
-
-  const handleDelete = (id) => {
-    if (window.confirm("Êtes-vous sûr de vouloir supprimer ce dossier ?")) {
-      setFolders(folders.filter(f => f.id !== id));
-    }
-  };
-
-  const toggleFavorite = (id) => {
-    setFolders(folders.map(f =>
-      f.id === id ? { ...f, isFavorite: !f.isFavorite } : f
-    ));
-  };
-
-  // Écoute l'événement global pour ouvrir le modal
-  useEffect(() => {
-    const handleOpenModal = () => {
-      setIsModalOpen(true);
-      setEditingFolder(null);
-    };
-    window.addEventListener('open-create-folder', handleOpenModal);
-    return () => window.removeEventListener('open-create-folder', handleOpenModal);
-  }, []);
+    {
+      id: 4,
+      name: "Archives",
+      description: "Anciens fichiers",
+      created: "Il y a 2 semaines",
+    },
+    {
+      id: 5,
+      name: "Vidéos",
+      description: "Contenus multimédias",
+      created: "Il y a 3 jours",
+    },
+    {
+      id: 6,
+      name: "Musique",
+      description: "Collection audio",
+      created: "Il y a 1 mois",
+    },
+  ];
+  const [viewMode, setViewMode] = useState("grid");
+  const [filteredFolders, setFilteredFolders] = useState(initialFolders);
 
   return (
-    <div>
-      {/* Empty State */}
-      {filteredFolders.length === 0 && (
-        <div className="text-center py-20 bg-gray-50 rounded-3xl border-2 border-dashed border-gray-200 mx-auto max-w-3xl">
-          <div className="text-8xl mb-6 opacity-60">📁</div>
-          <h3 className="text-2xl font-bold text-gray-800 mb-3">Aucun dossier trouvé</h3>
-          <p className="text-gray-500 mb-8 max-w-md mx-auto leading-relaxed">
-            {searchTerm || filterType !== 'all'
-              ? "Essayez d’élargir votre recherche ou changer de filtre."
-              : "Commencez par créer votre premier dossier pour organiser vos fichiers."}
-          </p>
-          {!searchTerm && filterType === 'all' && (
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-8">
+      <div className="max-w-7xl mx-auto">
+        {/* En-tête */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-slate-800 mb-2">
+            Mes Dossiers
+          </h1>
+          <p className="text-slate-600">Gérez vos fichiers et dossiers</p>
+        </div>
+
+        {/* Basculer le mode d'affichage */}
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-bold text-slate-800">Dossiers</h2>
+          <div className="flex gap-2">
             <button
-              onClick={() => setIsModalOpen(true)}
-              className="inline-flex items-center px-6 py-3 bg-slate-700 hover:bg-slate-800 text-white font-medium rounded-xl shadow-sm hover:shadow transition-all duration-200 group"
+              onClick={() => setViewMode("grid")}
+              className={`px-4 py-2 rounded-lg transition-colors ${
+                viewMode === "grid"
+                  ? "bg-blue-500 text-white"
+                  : "bg-white text-slate-600 hover:bg-slate-100"
+              }`}
             >
-              <svg className="w-5 h-5 mr-2 group-hover:rotate-90 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-              </svg>
-              Créer un nouveau dossier
+              Grille
             </button>
+            <button
+              onClick={() => setViewMode("list")}
+              className={`px-4 py-2 rounded-lg transition-colors ${
+                viewMode === "list"
+                  ? "bg-blue-500 text-white"
+                  : "bg-white text-slate-600 hover:bg-slate-100"
+              }`}
+            >
+              Liste
+            </button>
+          </div>
+        </div>
+
+        {/* Section des dossiers */}
+        <div className="mb-8">
+          {viewMode === "grid" ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {filteredFolders.map((folder) => (
+                <FolderCardGrid key={folder.id} folder={folder} />
+              ))}
+            </div>
+          ) : (
+            <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+              {filteredFolders.map((folder, i) => (
+                <FolderCardList
+                  key={folder.id}
+                  folder={folder}
+                  isLast={i === filteredFolders.length - 1}
+                />
+              ))}
+            </div>
           )}
         </div>
-      )}
-
-      {/* Grille ou Liste */}
-      {filteredFolders.length > 0 && (
-        <div className={`grid gap-6 ${viewMode === 'grid' ? 'md:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'}`}>
-          {filteredFolders.map((folder) => (
-            <FolderCard
-              key={folder.id}
-              folder={folder}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-              onToggleFavorite={toggleFavorite}
-            />
-          ))}
-        </div>
-      )}
-
-      {/* Modal */}
-      <FolderModal
-        isOpen={isModalOpen}
-        onClose={() => {
-          setIsModalOpen(false);
-          setEditingFolder(null);
-        }}
-        onSubmit={handleCreateOrUpdate}
-        initialData={editingFolder}
-      />
+      </div>
     </div>
   );
-};
-
-export default FolderGrid;
+}

@@ -5,6 +5,7 @@ import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import FoldersPage from './pages/FoldersPage';
 import FilePage from './pages/FilePage';
+import ProtectedRoute from './components/auth/ProtectedRoute';
 
 function App() {
   return (
@@ -12,9 +13,9 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<SignupPage />} />
-        <Route path="/folders" element={<FoldersPage />} />
-        <Route path="/files" element={<FilePage />} />
+        <Route path="/register" element={<SignupPage />} />
+        <Route path={`/folders` } element={<ProtectedRoute><FoldersPage /></ProtectedRoute>} />
+        <Route path="/files" element={<ProtectedRoute><FilePage /></ProtectedRoute>} />
       </Routes>
     </Router>
   );

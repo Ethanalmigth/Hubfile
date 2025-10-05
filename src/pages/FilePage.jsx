@@ -7,6 +7,7 @@ import Header from "../components/Header";
 import SearchBar from "../components/SearchBar";
 import { Filter, Star, Clock, Grid, List } from 'lucide-react';
 
+
 const FilePage = ({ folderName = "Projets clients" }) => {
   const [files, setFiles] = useState([
     {

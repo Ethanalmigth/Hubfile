@@ -1,8 +1,12 @@
 // src/components/UserMenu.jsx
 import React, { useState } from 'react';
-
 const UserMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
+
+  const logout=()=>{
+    localStorage.removeItem("token");
+    window.location.href = "/";
+  }
 
   return (
     <div className="relative">
@@ -20,7 +24,7 @@ const UserMenu = () => {
           <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Paramètres</a>
           <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Aide</a>
           <div className="border-t border-gray-100 my-1"></div>
-          <a href="/login" className="block px-4 py-2 text-sm text-red-600 hover:bg-red-50">Déconnexion</a>
+          <a href="/login" className="block px-4 py-2 text-sm text-red-600 hover:bg-red-50" onClick={logout}>Déconnexion</a>
         </div>
       )}
 

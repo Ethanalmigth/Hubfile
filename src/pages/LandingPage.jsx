@@ -22,7 +22,7 @@ const LandingPage = () => {
               <a href="/login" className="text-gray-600 hover:text-gray-900 font-medium transition-colors">
                 Connexion
               </a>
-              <a href="/signup" className="bg-slate-700 hover:bg-slate-800 text-white px-6 py-2.5 rounded-lg font-medium transition-all duration-200 shadow-sm hover:shadow-md">
+              <a href="/register" className="bg-slate-700 hover:bg-slate-800 text-white px-6 py-2.5 rounded-lg font-medium transition-all duration-200 shadow-sm hover:shadow-md">
                 Inscription gratuite
               </a>
             </div>
